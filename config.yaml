@@ -1,0 +1,3 @@
+weights:
+  path : pikachu/weights/best.pt
+# video_input: videos/input.mp4
