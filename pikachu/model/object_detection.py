@@ -1,8 +1,15 @@
 from ultralytics import YOLO
 import cv2
 from fastapi import Request
+import os 
+import glob
+import ffmpeg
+ 
+def convert_avi_to_mp4_ffmpeg(input_path, output_path):
+    ffmpeg.input(input_path).output(output_path, vcodec='libx264', crf=23, preset='medium', acodec='aac', ab='128k').run()
 
-def detect_objects_in_video(model,input_path: str, output_path: str):
+
+def detect_objects_in_video(model,input_path: str, output_path: str, TEMP_DIR_PATH: str,INPUT_DIR : str, OUTPUT_DIR : str):
     # Load YOLO model
     # model = YOLO("../hackathon/yolov8/runs/detect/train9/weights/best.pt")
     # model = request.app.state.model
@@ -12,41 +19,69 @@ def detect_objects_in_video(model,input_path: str, output_path: str):
     # output_path = "output_new_best.mp4"
 
     # Open video
-    cap = cv2.VideoCapture(input_path)
-    assert cap.isOpened(), f"Cannot open video {input_path}"
+    # cap = cv2.VideoCapture(input_path)
+    # assert cap.isOpened(), f"Cannot open video {input_path}"
 
-    # Get video properties
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    # # Get video properties
+    # fps = cap.get(cv2.CAP_PROP_FPS)
+    # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    # out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
-    # Run object tracking
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    # # Run object tracking
+    # while True:
+    #     ret, frame = cap.read()
+    #     if not ret:
+    #         break
 
-        # Run tracking
-        results = model.track(source=frame, persist=True, stream=False, verbose=False)
+    #     # Run tracking
+    #     results = model.track(source=input_path, persist=True, stream=False, verbose=False)
 
-        # Extract results
-        if results and results[0].boxes.id is not None:
-            boxes = results[0].boxes.xyxy.cpu().numpy()         # [x1, y1, x2, y2]
-            ids = results[0].boxes.id.cpu().numpy().astype(int) # Track IDs
+    #     # Extract results
+    #     if results and results[0].boxes.id is not None:
+    #         boxes = results[0].boxes.xyxy.cpu().numpy()         # [x1, y1, x2, y2]
+    #         ids = results[0].boxes.id.cpu().numpy().astype(int) # Track IDs
 
-            for box, obj_id in zip(boxes, ids):
-                x1, y1, x2, y2 = map(int, box)
-                label = f"id{obj_id}"
-                cv2.rectangle(frame, (x1, y1), (x2, y2), color=(0, 255, 0), thickness=1)
-                cv2.putText(frame, label, (x1, y1 - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+    #         for box, obj_id in zip(boxes, ids):
+    #             x1, y1, x2, y2 = map(int, box)
+    #             label = f"id{obj_id}"
+    #             cv2.rectangle(frame, (x1, y1), (x2, y2), color=(0, 255, 0), thickness=1)
+    #             cv2.putText(frame, label, (x1, y1 - 5),
+    #                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-        # Write frame
-        out.write(frame)
+    #     # Write frame
+    #     out.write(frame)
 
-    # Cleanup
-    cap.release()
-    out.release()
+    # # Cleanup
+    # cap.release()
+    # out.release()
+    model.track(
+        source=input_path,
+        save=True,
+        save_txt=False,
+        stream=False,
+        verbose=True,
+        show=False,
+        project=OUTPUT_DIR,
+        name="track",
+    )
+    output_avi_files = glob.glob(os.path.join(OUTPUT_DIR, "track", "*.avi"))
+    print(output_avi_files)
+    if not output_avi_files:
+        raise FileNotFoundError(f"No AVI file found in {os.path.join(OUTPUT_DIR, 'track')}")
+    
+    avi_file = output_avi_files[0]
+    # convert_avi_to_mp4_ffmpeg(avi_file,output_path)
+    
+    if os.path.exists(input_path):
+        os.remove(input_path)
+    # if os.path.exists(avi_file):
+    #     os.remove(avi_file)
+    
+    if not avi_file:
+        raise FileNotFoundError(f"No output video found in {avi_file}")
+
+    return avi_file
+    
     

@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Request, UploadFile, File
-from fastapi.responses import Response
+from fastapi import FastAPI, Request, UploadFile, File , HTTPException
+from fastapi.responses import Response,FileResponse
 from contextlib import asynccontextmanager
 from ultralytics import YOLO
 from pikachu.model.object_detection import detect_objects_in_video as detect_objects
@@ -7,6 +7,7 @@ import uuid
 import shutil
 import os
 import yaml
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,20 +39,50 @@ def server_check():
 def server_status():
     return {"status":"running"}
 
-@app.get("/detect")
+@app.post("/detect")
 async def detect(request: Request, file: UploadFile = File(...)):
-    os.makedirs("temp", exist_ok=True)
-    input_path = f"temp/{uuid.uuid4()}.mp4"
-    output_path = f"temp/output_{uuid.uuid4()}.mp4"
+    
+    TEMP_DIR_PATH = request.app.state.config["temp_files"]["path"]
+    INPUT_DIR = os.path.join(TEMP_DIR_PATH, "input")
+    OUTPUT_DIR = os.path.join(TEMP_DIR_PATH, "output")
 
-    # Save uploaded video
-    with open(input_path, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+    os.makedirs(TEMP_DIR_PATH, exist_ok=True)
+    os.makedirs(INPUT_DIR, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # Run detection
-    detect_objects(request.app.state.model, input_path, output_path)
+    file_uuid = uuid.uuid4()
+    input_path = os.path.join(INPUT_DIR, f"{file_uuid}.mp4")
+    output_path = os.path.join(OUTPUT_DIR, f"{file_uuid}.mp4")
+    try:
+        # Save uploaded video
+        with open(input_path, "wb") as f:
+            content = file.file.read()
+            f.write(content)
 
-    # Return processed video
-    return FileResponse(output_path, media_type="video/mp4", filename="processed.mp4")
+        if not os.path.exists(input_path):
+            raise HTTPException(status_code=500, detail=f"Failed to save input file at {input_path}")
         
+        if os.path.getsize(input_path) == 0:
+            os.remove(input_path)
+            raise HTTPException(status_code=400, detail="Uploaded file is empty")
 
+        # Run detection
+        output_video= detect_objects(request.app.state.model, input_path,output_path, TEMP_DIR_PATH,INPUT_DIR,OUTPUT_DIR)
+        
+        # Return processed video
+        response = FileResponse(output_video, media_type="video/mp4", filename="processed.mp4")
+
+        # if os.path.exists(output_video):
+        #     os.remove(output_video)
+
+        return response
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) 
+
+@app.get("/download/{filename}")
+def download_file(filename: str):
+    file_path = f"temp/output/track/{filename}"
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path, media_type="video/x-msvideo", filename=filename)

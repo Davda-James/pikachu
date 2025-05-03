@@ -1,3 +1,6 @@
 weights:
   path : pikachu/weights/trainv1.0/best.pt
+temp_files:
+  path : temp/
+
 # video_input: videos/input.mp4
