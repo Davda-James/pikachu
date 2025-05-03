@@ -1,3 +1,3 @@
 weights:
-  path : pikachu/weights/best.pt
+  path : pikachu/weights/trainv1.0/best.pt
 # video_input: videos/input.mp4
