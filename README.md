@@ -30,7 +30,7 @@
 - [Setting project locally](#setting-up-project-locally)
   - [Setting up backend locally](#setting-up-backend)
   - [Setting up frontend locally](#setting-up-frontend)
-
+- [Canva](#canva-ppt-link)
 
 
 ## Pipeline 
