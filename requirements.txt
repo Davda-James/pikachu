@@ -5,3 +5,10 @@ fastapi==0.115.12
 uvicorn==0.34.2
 python-multipart==0.0.20
 lap==0.5.12
+aiortc==1.11.0
+rich==13.7.1
+google-auth==2.39.0
+google-auth-oauthlib==1.2.2
+google-auth-httplib2==0.2.0
+python-dotenv==0.21.0
+google-api-python-client==2.169.0

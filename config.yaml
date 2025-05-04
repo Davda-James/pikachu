@@ -1,5 +1,5 @@
 weights:
-  path : pikachu/weights/trainv1.0/best.pt
+  path : pikachu/weights/trainv1.0/best_nano.pt
 temp_files:
   path : temp/
 
