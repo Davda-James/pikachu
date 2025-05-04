@@ -39,16 +39,16 @@
 <img src="./pikachu/public/images/pipeline.png">
 
 ## Demo
-### Object Detection Demo
+#### Object Detection Demo
 
 
 
-### Track Path Demo
+#### Track Path Demo
 
-### Velocity Map Demo
+#### Velocity Map Demo
 
 
-### Anamoly Detection
+#### Anamoly Detection
 
 ## Setting project locally
 
