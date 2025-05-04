@@ -3,7 +3,7 @@ from fastapi.responses import Response,FileResponse,StreamingResponse
 from typing import Optional
 from contextlib import asynccontextmanager
 from ultralytics import YOLO
-from pikachu.model.object_detection import detect_objects_in_video as detect_objects, track_flow, track_overlay, anam_detect
+from pikachu.model.object_detection import detect_objects_in_video as detect_objects, track_flow, track_overlay, anam_detect, track_velocity_map
 import uuid
 import os
 import yaml
@@ -173,3 +173,42 @@ def detect_anam(request: Request, file: UploadFile = File(...), confidence: Opti
         raise HTTPException(status_code=500, detail=str(e))
     
 
+@app.post("/vmap")
+def velocity_map(request: Request, file: UploadFile = File(...), confidence: Optional[float] = Form(0.15)):
+    INPUT_DIR = request.app.state.input_dir
+    OUTPUT_DIR = request.app.state.output_dir
+
+    file_uuid = uuid.uuid4()
+    input_path = os.path.join(INPUT_DIR, f"{file_uuid}.mp4")
+    output_path = os.path.join(OUTPUT_DIR, f"{file_uuid}.mp4")
+
+    try:
+        # Save uploaded video
+        with open(input_path, "wb") as f:
+            content = file.file.read()
+            f.write(content)
+
+        if not os.path.exists(input_path):
+            raise HTTPException(status_code=500, detail=f"Failed to save input file at {input_path}")
+        
+        if os.path.getsize(input_path) == 0:
+            os.remove(input_path)
+            raise HTTPException(status_code=400, detail="Uploaded file is empty")
+        
+        # Run detection
+        output_video = track_velocity_map(request.app.state.model, confidence, input_path, output_path)
+        
+        # Stream video and clean up after response
+        def stream_and_cleanup():
+            with open(output_video, "rb") as video:
+                yield from video
+            os.remove(output_path)
+        
+        return StreamingResponse(stream_and_cleanup(), media_type="video/mp4", headers={"Content-Disposition": "attachment; filename=processed.mp4"})
+            
+    except Exception as e:
+        if os.path.exists(input_path):
+            os.remove(input_path)
+        if os.path.exists(output_path):
+            os.remove(output_path)
+        raise HTTPException(status_code=500, detail=str(e))    

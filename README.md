@@ -1,4 +1,4 @@
-<h1 align="center"> Pikachu AI </h1>
+<h1 align="center"> Pikachoo AI </h1>
 <div align="center">
   <img src="./pikachu/public/images/pikachu_small.svg" style="height: 400px; width: 400px;">
 </div>
@@ -20,12 +20,74 @@
 
 
 ## 📚 Table of Contents
+- [Download app](#download-app)
 - [Pipeline](#pipeline)
-- [Data Preparation](#data-preparation)
+- [Demo](#demo)
+  - [Object Detection Demo](#object-detection-demo)
+  - [Demo of Tracking Path](#track-path-demo)
+  - [Demo of velocity map](#velocity-map-demo)
+  - [Demo of anamoly detection](#anamoly-detection-demo)
+<!-- - [Data Preparation](#data-preparation) -->
 - [Setting project locally](#setting-up-project-locally)
   - [Setting up backend locally](#setting-up-backend)
   - [Setting up frontend locally](#setting-up-frontend)
 
+## Download app
+
+
 ## Pipeline 
 <img src="./pikachu/public/images/pipeline.png">
 
+## Demo
+### Object Detection Demo
+
+
+
+### Track Path Demo
+
+### Velocity Map Demo
+
+
+### Anamoly Detection
+
+## Setting project locally
+
+### Setting up backend 
+- Cloning the repo **https:github.com:Davda-James/pikachu.git**
+```bash
+git clone https:github.com:Davda-James/pikachu.git
+```
+- Change the working directory
+```bash
+cd pikachu
+```
+- Creating python virtual environment
+```bash
+python -m venv venv
+```
+- Activate python virtual environment
+  - For linux 
+  ```bash
+  source venv/bin/activate
+  ```
+  - For windows
+  ```bash
+  venv/scripts/activate
+  ```
+- Install requirements
+```bash
+pip install -r requirements.txt
+```
+- Starting backend fastapi server
+```bash
+uvicorn pikachu.app:app --host 0.0.0.0 --port 8000
+```
+
+## Setting up gmail service account
+- Visit **https://github.com/Davda-James/InboxGenie/blob/main/README.md**
+- Follow above README (skip GEMINI API portion as not needed here)
+- Store credentials.json in root directory pikachu
+
+## Setting up frontend
+- No need have direct download apk, download from below
+- Link to **github** frontend [Frontend](https://github.com/Davda-James/pikachu_frontend.git) if wanted to visit. 
