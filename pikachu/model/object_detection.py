@@ -5,6 +5,7 @@ import os
 import ffmpeg
 from collections import defaultdict
 import numpy as np
+from pikachu.model.mail import main 
 
  
 def convert_avi_to_mp4_ffmpeg(input_path, output_path):
@@ -198,7 +199,7 @@ def track_overlay(model,confidence : float, input_path: str, output_path: str):
     return output_path
 
 def anam_detect(model,confidence : float, input_path: str, output_path: str):
-
+    flag=False
     # Load video and model
     # Open video and get frame size & FPS
     cap = cv2.VideoCapture(input_path)
@@ -266,7 +267,9 @@ def anam_detect(model,confidence : float, input_path: str, output_path: str):
 
         # Compute population flow
         population_flow = smoothed_density * (smoothed_velocity)
-        
+
+        if np.max(population_flow) > 0.01:
+            flag=True
 
         # Apply Gaussian blur
         blurred = cv2.GaussianBlur(population_flow, (0, 0), sigmaX=30, sigmaY=30)
@@ -292,5 +295,7 @@ def anam_detect(model,confidence : float, input_path: str, output_path: str):
     cap.release()
     overlay_writer.release()
     cv2.destroyAllWindows()
+    if flag:
+        main()
     return output_path
 

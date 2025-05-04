@@ -74,7 +74,3 @@ def main():
     send_email_reply(service,to,my)
 
 
-
-
-if __name__=="__main__":
-    main()
