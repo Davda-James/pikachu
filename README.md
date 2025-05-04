@@ -31,7 +31,6 @@
   - [Setting up backend locally](#setting-up-backend)
   - [Setting up frontend locally](#setting-up-frontend)
 
-## Download app
 
 
 ## Pipeline 
@@ -98,3 +97,6 @@ uvicorn pikachu.app:app --host 0.0.0.0 --port 8000
 ## Setting up frontend
 - No need have direct download apk, download from below
 - Link to **github** frontend [Frontend](https://github.com/Davda-James/pikachu_frontend.git) if wanted to visit. 
+
+## Canva PPT Link
+[Canva](https://www.canva.com/design/DAGmZe80NL8/MUc-exSD9r_IDL8zE9YlNg/edit?utm_content=DAGmZe80NL8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
