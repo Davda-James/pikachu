@@ -27,7 +27,6 @@
   - [Demo of Tracking Path](#track-path-demo)
   - [Demo of velocity map](#velocity-map-demo)
   - [Demo of anamoly detection](#anamoly-detection-demo)
-<!-- - [Data Preparation](#data-preparation) -->
 - [Setting project locally](#setting-up-project-locally)
   - [Setting up backend locally](#setting-up-backend)
   - [Setting up frontend locally](#setting-up-frontend)
@@ -39,18 +38,26 @@
 <img src="./pikachu/public/images/pipeline.png">
 
 ## Demo
-#### Object Detection Demo
+### Object Detection Demo
+[Video](https://github.com/user-attachments/assets/a88cb2dd-fc75-4083-890d-2d2d244c9c39)
 
 
-
-#### Track Path Demo
-
-#### Velocity Map Demo
+### Track Path Demo
+[Video](https://github.com/user-attachments/assets/fca94df9-1a3c-4c4f-8226-36a46fe33dad)
 
 
-#### Anamoly Detection
+### Track Path with overlay Demo
+[Video](https://github.com/user-attachments/assets/7241c43c-8eff-4814-a146-e129a6d2a927)
 
-## Setting project locally
+
+### Velocity Map Demo
+[Video](https://github.com/user-attachments/assets/09e0906b-c00a-41ef-8dbc-6c54734e0b9c)
+
+
+### Anamoly Detection Demo
+[Video](https://github.com/user-attachments/assets/c6d12907-c29b-4430-a27c-397617cc1c81)
+
+## Setting up project locally
 
 ### Setting up backend 
 - Cloning the repo **https:github.com:Davda-James/pikachu.git**
