@@ -1,6 +1,6 @@
 <h1 align="center"> Pikachu AI </h1>
 <div align="center">
-  <img src="./pikachu/public/images/pikachu.svg">
+  <img src="./pikachu/public/images/pikachu_small.svg">
 </div>
 
 [![ultralytics](https://img.shields.io/badge/ultralytics-8.3.123-blue)](https://pypi.org/project/ultralytics/)
